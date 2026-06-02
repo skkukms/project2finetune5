@@ -29,7 +29,7 @@ discriminator:
   attention_resolutions: [32]
 
 training:
-  train_zip: /content/drive/MyDrive/project2/train_50k_1024.zip
+  train_zip: /content/drive/MyDrive/project2claude/train_50k_1024.zip
   resolution: 1024
   batch_size: 8
   total_images: 200_000
