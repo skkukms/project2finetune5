@@ -35,7 +35,7 @@ training:
   flip: true
 
   augment: color,translation
-  consistency_weight: 0.5
+  consistency_weight: 0.05
 
   lr_r: 0.001
   lr_d: 0.001
