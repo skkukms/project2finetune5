@@ -265,8 +265,10 @@ def main() -> None:
     wandb_run_id: str | None = None
 
     # ---- Resume --------------------------------------------------------
+    resume_ckpt: dict | None = None
     if args.resume:
-        ckpt = torch.load(args.resume, map_location=device, weights_only=False)
+        resume_ckpt = torch.load(args.resume, map_location=device, weights_only=False)
+        ckpt = resume_ckpt
         refiner.load_state_dict(ckpt["refiner_state"])
         D.load_state_dict(ckpt["D_state"])
         refiner_ema.load_state_dict(ckpt["refiner_ema_state"])
@@ -315,14 +317,17 @@ def main() -> None:
     ckpt_every     = train_cfg["ckpt_every"]
     grad_clip_r    = float(train_cfg.get("grad_clip_r", float("inf")))
     grad_clip_d    = float(train_cfg.get("grad_clip_d", float("inf")))
-    augment_policy = train_cfg.get("augment", "") or ""
+    augment_policy = train_cfg.get("augment", "")
     consist_w      = float(train_cfg.get("consistency_weight", 0.5))
     ema_half_life  = train_cfg["ema_half_life"]
     train_cfg["g256_ckpt"] = str(g256_path)
     if args.phase == 2:
-        train_cfg["r512_ckpt"] = str(args.r512_ckpt or
-                                     torch.load(args.resume, map_location="cpu",
-                                                weights_only=False)["meta"]["training_config"]["r512_ckpt"])
+        if args.r512_ckpt:
+            train_cfg["r512_ckpt"] = str(args.r512_ckpt)
+        elif resume_ckpt is not None:
+            train_cfg["r512_ckpt"] = resume_ckpt["meta"]["training_config"]["r512_ckpt"]
+        else:
+            raise SystemExit("Phase 2 requires --r512-ckpt.")
 
     frozen_r512_cfg = frozen_r512.cfg if frozen_r512 else None
 

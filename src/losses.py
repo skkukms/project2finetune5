@@ -23,4 +23,4 @@ def r1_penalty(D: nn.Module, x_real: torch.Tensor, gamma: float = 10.0) -> torch
     x = x_real.detach().requires_grad_(True)
     d = D(x).sum()
     (grad,) = torch.autograd.grad(d, x, create_graph=True)
-    return (gamma / 2.0) * grad.pow(2).flatten(1).sum(dim=1).mean()
+    return (gamma / 2.0) * grad.square().flatten(1).sum(dim=1).mean()

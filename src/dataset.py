@@ -58,6 +58,13 @@ class ZipImageDataset(Dataset):
         t = t * (self.hi - self.lo) + self.lo
         return t
 
+    def __del__(self) -> None:
+        if self._zf is not None:
+            try:
+                self._zf.close()
+            except Exception:
+                pass
+
     def __getstate__(self) -> dict:
         state = self.__dict__.copy()
         state["_zf"] = None
