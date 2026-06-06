@@ -36,16 +36,16 @@ discriminator:
 training:
   train_zip: /content/drive/MyDrive/project2claude/train_50k_256.zip
   resolution: 256
-  batch_size: 64
-  total_images: 1_000_000   # 베이스가 이미 2M 학습했으니 추가 1M
+  batch_size: 16
+  total_images: 500_000
   num_workers: 4
   flip: true
 
   precision: fp32
   augment: color,translation
 
-  lr_g: 0.0002   # finetune이므로 lr 낮게
-  lr_d: 0.0002
+  lr_g: 0.0005
+  lr_d: 0.0005
   beta1: 0.0
   beta2: 0.9
   weight_decay: 0.0
